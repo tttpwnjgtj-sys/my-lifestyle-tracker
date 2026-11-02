@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#DCEFE5">
+<meta name="description" content="La tua agenda personale per alimentazione, allenamento, peso e benessere.">
+<link rel="manifest" href="manifest.webmanifest">
+<title>My Lifestyle</title>
+<style>
+:root{--sage:#DCEFE5;--pink:#F8E2DC;--yellow:#F9EBCB;--lilac:#E4DDF5;--blue:#DDEAF8;--ink:#294B38;--muted:#68766d;--bg:#f7f8f6;--card:#fff;--line:#e7ebe7}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#25342b;font:15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding-bottom:88px}
+header{background:var(--sage);padding:22px 18px 18px;color:var(--ink);border-radius:0 0 24px 24px}
+header small{letter-spacing:2px;font-weight:700;font-size:11px}header h1{margin:7px 0 3px;font-size:27px}header p{margin:0;color:#496c59;font-size:13px}
+main{max-width:760px;margin:auto;padding:16px}
+nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding:8px 4px calc(8px + env(safe-area-inset-bottom));z-index:4}
+nav button{border:0;background:none;color:#778078;font-size:10px;padding:5px 1px;display:flex;flex-direction:column;gap:4px;align-items:center}
+nav button span{font-size:19px}nav button.active{color:#397653;font-weight:700}
+h2{font-size:21px;margin:8px 0 4px;color:var(--ink)}h3{font-size:15px;margin:0 0 10px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:14px;margin-bottom:11px;box-shadow:0 2px 9px #1d382008}
+.tile{border:0;border-radius:16px;padding:14px;min-height:105px}.tile small{display:block;color:#53665a}.tile strong{font-size:25px;display:block;margin:8px 0 2px}.sage{background:var(--sage)}.pink{background:var(--pink)}.yellow{background:var(--yellow)}.lilac{background:var(--lilac)}.blue{background:var(--blue)}
+label{display:block;font-size:12px;color:var(--muted);margin:10px 0 5px}
+input,select,textarea{width:100%;border:1px solid #dce3dd;border-radius:11px;padding:11px 12px;font:inherit;background:#fff;color:#25342b}
+button.primary,.action{background:#477d5c;color:white;border:0;border-radius:12px;padding:12px 15px;font-weight:650;width:100%;margin-top:10px}
+button.secondary{background:#eef3ef;color:#355e43;border:0;border-radius:11px;padding:10px 12px;font-weight:600}
+button.danger{background:#fff0ed;color:#9b493d;border:0;border-radius:10px;padding:7px 10px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.row + .row{margin-top:9px}
+.progress{height:9px;background:#edf0ed;border-radius:20px;overflow:hidden;margin:7px 0 13px}.progress i{display:block;height:100%;background:#83b99a;border-radius:20px}
+.metric{font-size:12px;color:var(--muted)}.big{font-size:26px;font-weight:750;color:var(--ink)}
+.item{padding:10px 0;border-bottom:1px solid var(--line)}.item:last-child{border-bottom:0}
+.pill{font-size:11px;padding:5px 8px;border-radius:30px;background:#f0f4f0;color:#53665a}
+.hidden{display:none!important}.empty{color:#7b857e;text-align:center;padding:22px 8px;font-size:13px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.notice{font-size:12px;color:#6f786f;background:#f5f6f3;border-radius:12px;padding:11px;line-height:1.45}
+table{width:100%;border-collapse:collapse;font-size:12px}td,th{text-align:left;padding:8px 4px;border-bottom:1px solid var(--line)}
+@media(min-width:650px){nav{position:sticky;top:0;bottom:auto;max-width:760px;margin:0 auto;border:1px solid var(--line);border-radius:0 0 16px 16px}body{padding-bottom:20px}header{padding-left:max(18px,calc((100vw - 724px)/2))}}
+</style>
+</head>
+<body>
+<header><small>MY LIFESTYLE</small><h1>La mia giornata 🌿</h1><p>Piccoli progressi, ogni giorno.</p></header>
+<main id="app"></main>
+<nav id="nav">
+<button data-tab="home" class="active"><span>🏠</span>Home</button>
+<button data-tab="gym"><span>🏋️</span>Palestra</button>
+<button data-tab="food"><span>🍓</span>Cibo</button>
+<button data-tab="weight"><span>⚖️</span>Peso</button>
+<button data-tab="well"><span>🧘</span>Benessere</button>
+<button data-tab="profile"><span>⚙️</span>Profilo</button>
+</nav>
+<script>
+const KEY='myLifestyleDataV1';
+const foodNames=`YOGURT GRECO FAMILA|INSTANT OATS BISCOTTO|OATMEAL LEMON PIE|OATMEAL BROWNIE|CHOCO BUTTER BIANCO|CHOCO BUTTER NERO|TOPPING CIOCCOLATO BIANCO|TOPPING CIOCCOLATO BIANCO+NOCCIOLE|GRANOLA PROTEICA|GRANOLA GIALLA|BARRETTA BILLION|BARRETTA ZERO|BARRETTA TOFFEE|BARRETTA CREMA E BISCOTTO|BARRETTA CIOCCOLATO BIANCO + LAMPONI|BARRETTA CIOCCOLATO BELGA|CREMA D'ARACHIDI AL CARAMELLO|PROTEINE IN POLVERE AL CIOCCOLATO BIANCO|QUARK PROTEICO LIDL|RICE PUDDING VANILLA LIDL|RICE PUDDING CHOCOLATE LIDL|YOGURT GRECO LIDL|PETTO DI POLLO|ALBUME|TONNO LIDL|TRANCIo SALMONE|UOVO 1 60gr|FIOCCHI DI LATTE|MOZZARELLA LIGHT LIDL|MOZZARELLA PROTEIN LIDL|PASTA DI LEGUMI|PASTA PROTEIN|PASTA INTEGRALE|RISO BASMATI|RISO JASMIN|RISOVI' FANTASIA INTEGRALE|COUS COUS|MAIS SCATOLA|PATATE LESSE|FRAGOLE|KIWI GOLD|VALERIANA|ZUCCHINE|CAROTE|FUNGHI|MELANZANE|PEPERONI|POMODORINI|BROCCOLI|CAVOLFIORE|ERBETTE CAMPAGNOLE|CONTORNO GRIGLIATO LIDL|FAGIOLINI|PISELLI|LENTICCHIE|TOFU|FETA GRECA|CRACKERS DORIANO INTEGRALI|COTOLETTA VEGETALE VEMONDO|THE PROTEICO LIDL|NASELLO LIDL|PATATE DOLCI|OLIVE TAGGIASCHE|GELATO LIDL CHOCO E VANILLA FLAVOR|GRANA PADANO|LATTE|CRUNCHY BURGER LIDL ZUCCA/LENTICCHIE/POMODORI|HAMBURGER DI SCOTTONA|PANE HAMBURGER TREVISAN`.split('|');
+let data=load();
+function blank(){return {foods:foodNames.map(name=>({name,kcal:'',fat:'',carbs:'',protein:''})), meals:[], weights:[], workouts:[], wellbeing:[],steps:0,water:0,cardio:0,goals:{kcal:1600,protein:130,steps:10000,water:2000,cardio:150},profile:{start:'',target:'60',shift:''}}}
+function load(){try{return {...blank(),...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){return blank()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+let tab='home';
+const app=document.getElementById('app');
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('active',x===b));render()});
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function n(v){return Number(v)||0}
+function sum(){return data.meals.reduce((a,x)=>{let f=data.foods.find(y=>y.name===x.food)||{};let m=x.grams/100; a.kcal+=n(f.kcal)*m;a.fat+=n(f.fat)*m;a.carbs+=n(f.carbs)*m;a.protein+=n(f.protein)*m;return a},{kcal:0,fat:0,carbs:0,protein:0})}
+function pct(v,t){return Math.min(100,Math.round(v/Math.max(1,t)*100))}
+function progress(v,t){return `<div class="progress"><i style="width:${pct(v,t)}%"></i></div>`}
+function section(title,sub=''){return `<h2>${title}</h2>${sub?`<p class="sub">${sub}</p>`:''}`}
+function home(){let s=sum();return `${section('Il tuo riepilogo','La tua giornata, a colpo d’occhio.')}<div class="grid">
+<div class="tile pink"><small>🔥 Calorie</small><strong>${Math.round(s.kcal)} kcal</strong><small>${Math.max(0,data.goals.kcal-s.kcal).toFixed(0)} rimanenti</small></div>
+<div class="tile lilac"><small>🥚 Proteine</small><strong>${s.protein.toFixed(1)} g</strong><small>${Math.max(0,data.goals.protein-s.protein).toFixed(1)} rimanenti</small></div>
+<div class="tile blue"><small>👣 Passi</small><strong>${n(data.steps).toLocaleString('it-IT')}</strong><small>Obiettivo ${n(data.goals.steps).toLocaleString('it-IT')}</small></div>
+<div class="tile sage"><small>💧 Acqua</small><strong>${n(data.water)} ml</strong><small>Obiettivo ${n(data.goals.water)} ml</small></div></div>
+<div class="card"><div class="row"><b>Calorie</b><span class="metric">${pct(s.kcal,data.goals.kcal)}%</span></div>${progress(s.kcal,data.goals.kcal)}<div class="row"><b>Proteine</b><span class="metric">${pct(s.protein,data.goals.protein)}%</span></div>${progress(s.protein,data.goals.protein)}</div>
+<div class="card"><h3>Movimento e attività</h3><div class="row"><span>Cardio settimanale</span><b>${n(data.cardio)} / ${data.goals.cardio} min</b></div>${progress(data.cardio,data.goals.cardio)}<label>Passi di oggi</label><input id="steps" type="number" value="${n(data.steps)}"><label>Acqua bevuta (ml)</label><input id="water" type="number" value="${n(data.water)}"><label>Cardio questa settimana (minuti)</label><input id="cardio" type="number" value="${n(data.cardio)}"><button class="primary" onclick="saveDaily()">Aggiorna riepilogo</button></div>`}
+function food(){let s=sum();return `${section('Diario alimentare','Seleziona un alimento già presente nel tuo archivio e inserisci i grammi.')}<div class="grid"><div class="tile yellow"><small>Calorie</small><strong>${s.kcal.toFixed(0)}</strong><small>di ${data.goals.kcal} kcal</small></div><div class="tile pink"><small>Proteine</small><strong>${s.protein.toFixed(1)} g</strong><small>di ${data.goals.protein} g</small></div></div>
+<div class="card"><h3>Aggiungi un alimento</h3><label>Alimento</label><select id="foodSelect">${data.foods.map(f=>`<option>${esc(f.name)}</option>`).join('')}</select><div class="notice" id="foodValues">Valori per 100 g: completa o importa il tuo archivio per visualizzarli.</div><div class="two"><div><label>Quantità (g)</label><input id="foodGrams" type="number" min="1" value="100"></div><div><label>Pasto</label><select id="mealType"><option>Colazione</option><option>Spuntino</option><option>Pranzo</option><option>Cena</option></select></div></div><button class="primary" onclick="addMeal()">Aggiungi al diario</button><button class="secondary" onclick="editFoods()">Modifica archivio alimenti</button></div>
+<div class="card"><h3>Riepilogo di oggi</h3>${['Colazione','Spuntino','Pranzo','Cena'].map(m=>{let arr=data.meals.filter(x=>x.meal===m);return arr.length?`<h3>${m}</h3>${arr.map(x=>`<div class="item row"><div><b>${esc(x.food)}</b><div class="metric">${x.grams} g · ${calc(x).kcal.toFixed(0)} kcal · P ${calc(x).protein.toFixed(1)} g</div></div><button class="danger" onclick="removeMeal(${x.id})">Elimina</button></div>`).join('')}`:''}).join('')||'<div class="empty">Nessun alimento inserito.</div>'}
+<div class="item row"><b>Totale</b><b>${s.kcal.toFixed(0)} kcal</b></div><div class="row"><span class="metric">Grassi ${s.fat.toFixed(1)} g · Carboidrati ${s.carbs.toFixed(1)} g · Proteine ${s.protein.toFixed(1)} g</span></div></div>
+<div class="notice">I nomi degli alimenti sono già caricati. I valori nutrizionali originali devono essere reinseriti/importati: non ho inserito numeri non verificati.</div>`}
+function calc(x){let f=data.foods.find(y=>y.name===x.food)||{},m=x.grams/100;return {kcal:n(f.kcal)*m,protein:n(f.protein)*m}}
+function gym(){return `${section('La mia palestra','Registra esercizi, carichi, serie, ripetizioni e RIR.')}<div class="card"><h3>Nuovo esercizio</h3><label>Allenamento</label><select id="gDay"><option>Upper</option><option>Lower</option><option>Total Body</option></select><label>Nome esercizio</label><input id="gEx" placeholder="Es. Hip thrust"><div class="two"><div><label>Serie</label><input id="gSets" type="number" value="3"></div><div><label>Ripetizioni</label><input id="gReps" type="number" value="10"></div><div><label>Carico (kg)</label><input id="gKg" type="number" step=".5"></div><div><label>RIR</label><input id="gRir" type="number" value="2"></div></div><button class="primary" onclick="addWorkout()">Salva esercizio</button></div><div class="card"><h3>Storico allenamenti</h3>${data.workouts.length?data.workouts.slice().reverse().map((x,i)=>`<div class="item"><b>${esc(x.exercise)}</b><div class="metric">${esc(x.day)} · ${x.sets} × ${x.reps} · ${x.kg} kg · RIR ${x.rir} · ${x.date}</div></div>`).join(''):'<div class="empty">I tuoi allenamenti registrati appariranno qui.</div>'}</div><div class="notice">Il conteggio dei volumi per gruppo muscolare sarà affinato aggiungendo la classificazione degli esercizi.</div>`}
+function weight(){let last=data.weights.at(-1);return `${section('Il mio peso','Registra le pesate e osserva il trend, senza farti condizionare dalle oscillazioni quotidiane.')}<div class="card"><label>Nuova pesata (kg)</label><input id="wVal" type="number" step=".1" placeholder="Es. 74.8"><button class="primary" onclick="addWeight()">Registra peso</button></div><div class="grid"><div class="tile sage"><small>Ultimo peso</small><strong>${last?last.kg+' kg':'—'}</strong></div><div class="tile lilac"><small>Obiettivo</small><strong>${data.profile.target||'60'} kg</strong></div></div><div class="card"><h3>Storico pesate</h3>${data.weights.length?data.weights.slice().reverse().map(x=>`<div class="item row"><span>${x.date}</span><b>${x.kg} kg</b></div>`).join(''):'<div class="empty">Inserisci la prima pesata per iniziare il grafico.</div>'}</div>`}
+function well(){return `${section('Il mio benessere','Sonno, energia, umore e recupero.')}<div class="card"><label>Ore di sonno</label><input id="sleep" type="number" step=".25" placeholder="Es. 7.5"><label>Energia</label><select id="energy"><option>Bassa</option><option>Discreta</option><option>Buona</option><option>Ottima</option></select><label>Umore</label><select id="mood"><option>Da valutare</option><option>Basso</option><option>Neutro</option><option>Buono</option><option>Ottimo</option></select><label>Stress</label><select id="stress"><option>Basso</option><option>Moderato</option><option>Alto</option></select><label>Recupero muscolare</label><select id="recovery"><option>Scarso</option><option>Discreto</option><option>Buono</option><option>Ottimo</option></select><button class="primary" onclick="addWell()">Salva benessere di oggi</button></div><div class="card"><h3>Ultime registrazioni</h3>${data.wellbeing.slice().reverse().slice(0,10).map(x=>`<div class="item"><b>${x.date}</b><div class="metric">Sonno ${x.sleep} h · Energia ${x.energy} · Umore ${x.mood} · Recupero ${x.recovery}</div></div>`).join('')||'<div class="empty">Nessuna registrazione.</div>'}</div>`}
+function profile(){return `${section('Il mio profilo','Personalizza gli obiettivi e conserva i tuoi dati.')}<div class="card"><h3>Obiettivi giornalieri e settimanali</h3>${[['kcal','Calorie (kcal)'],['protein','Proteine (g)'],['steps','Passi'],['water','Acqua (ml)'],['cardio','Cardio settimanale (min)']].map(([k,l])=>`<label>${l}</label><input id="goal_${k}" type="number" value="${data.goals[k]}">`).join('')}<label>Peso obiettivo (kg)</label><input id="targetWeight" type="number" step=".1" value="${esc(data.profile.target)}"><label>Turni di lavoro / note</label><input id="shift" value="${esc(data.profile.shift)}" placeholder="Es. mattina, pomeriggio, notte"><button class="primary" onclick="saveProfile()">Salva obiettivi</button></div><div class="card"><h3>Backup dei dati</h3><p class="sub">Esporta una copia dei tuoi dati oppure importa un backup precedente.</p><button class="primary" onclick="exportData()">Esporta backup JSON</button><label>Importa backup JSON</label><input id="importFile" type="file" accept=".json,application/json"><button class="secondary" onclick="importData()">Importa backup</button></div><div class="card"><h3>Archivio alimenti</h3><button class="secondary" onclick="editFoods()">Modifica valori nutrizionali</button><label>Importa archivio CSV</label><p class="metric">Formato: alimento,kcal,grassi,carboidrati,proteine (valori per 100 g).</p><input id="csvFile" type="file" accept=".csv,text/csv"><button class="secondary" onclick="importCSV()">Importa CSV</button></div><div class="notice">I dati sono salvati localmente nel browser di questo dispositivo. Esporta regolarmente un backup. La sincronizzazione Apple Salute/Fitdays/Lyfta non è inclusa in questa versione.</div>`}
+function render(){app.innerHTML=({home,food,gym,weight,well,profile})[tab]();if(tab==='food'){document.getElementById('foodSelect').onchange=showFoodValues;showFoodValues()}}
+function showFoodValues(){let f=data.foods.find(x=>x.name===document.getElementById('foodSelect').value);document.getElementById('foodValues').textContent=`Per 100 g · ${f.kcal||'—'} kcal · Grassi ${f.fat||'—'} g · Carboidrati ${f.carbs||'—'} g · Proteine ${f.protein||'—'} g`}
+function saveDaily(){['steps','water','cardio'].forEach(k=>data[k]=n(document.getElementById(k).value));save();render()}
+function addMeal(){let f=document.getElementById('foodSelect').value,g=n(document.getElementById('foodGrams').value);if(!g)return;data.meals.push({id:Date.now(),food:f,grams:g,meal:document.getElementById('mealType').value});save();render()}
+function removeMeal(id){data.meals=data.meals.filter(x=>x.id!==id);save();render()}
+function addWorkout(){let ex=document.getElementById('gEx').value.trim();if(!ex)return;data.workouts.push({day:document.getElementById('gDay').value,exercise:ex,sets:n(gSets.value),reps:n(gReps.value),kg:n(gKg.value),rir:n(gRir.value),date:new Date().toLocaleDateString('it-IT')});save();render()}
+function addWeight(){let kg=n(document.getElementById('wVal').value);if(!kg)return;data.weights.push({kg:kg.toFixed(1),date:new Date().toLocaleDateString('it-IT')});save();render()}
+function addWell(){data.wellbeing.push({sleep:n(sleep.value),energy:energy.value,mood:mood.value,stress:stress.value,recovery:recovery.value,date:new Date().toLocaleDateString('it-IT')});save();render()}
+function saveProfile(){['kcal','protein','steps','water','cardio'].forEach(k=>data.goals[k]=n(document.getElementById('goal_'+k).value));data.profile.target=targetWeight.value;data.profile.shift=shift.value;save();render();alert('Obiettivi salvati.')}
+function exportData(){let b=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='my-lifestyle-backup.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(){let f=importFile.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{data={...blank(),...JSON.parse(r.result)};save();render();alert('Backup importato.')}catch(e){alert('File non valido.')}};r.readAsText(f)}
+function importCSV(){let f=csvFile.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{let rows=r.result.split(/\r?\n/).filter(Boolean).slice(1);rows.forEach(line=>{let p=line.split(/[;,\t]/).map(x=>x.trim().replace(',','.'));if(p.length<5)return;let food=data.foods.find(x=>x.name.toLowerCase()===p[0].toLowerCase());if(food){[food.kcal,food.fat,food.carbs,food.protein]=p.slice(1,5)}else data.foods.push({name:p[0],kcal:p[1],fat:p[2],carbs:p[3],protein:p[4]})});save();alert('Archivio alimenti importato.');render()};r.readAsText(f)}
+function editFoods(){let f=data.foods[0];let name=prompt('Nome alimento da modificare (scrivilo esattamente):',f.name);if(!name)return;let x=data.foods.find(z=>z.name.toLowerCase()===name.toLowerCase());if(!x){alert('Alimento non trovato.');return}let vals=prompt('Inserisci kcal, grassi, carboidrati, proteine per 100 g separati da virgola:',`${x.kcal},${x.fat},${x.carbs},${x.protein}`);if(!vals)return;let a=vals.split(',').map(v=>v.trim().replace(',','.'));if(a.length!==4||a.some(v=>!Number.isFinite(Number(v)))){alert('Valori non validi.');return}[x.kcal,x.fat,x.carbs,x.protein]=a;save();render()}
+render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>

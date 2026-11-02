@@ -1,0 +1,9 @@
+{
+  "name": "My Lifestyle Tracker",
+  "short_name": "My Lifestyle",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7f8f6",
+  "theme_color": "#DCEFE5",
+  "lang": "it"
+}
